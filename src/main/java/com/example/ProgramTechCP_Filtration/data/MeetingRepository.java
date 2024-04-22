@@ -17,20 +17,20 @@ public interface MeetingRepository extends JpaRepository<MeetingInfo, UUID> {
     List<MeetingInfo> findAllByDate_of_meeting(LocalDateTime date_of_meeting, LocalDateTime date_of_meeting2);
 
     @Query("SELECT m FROM meeting m where m.date_of_meeting between ?1 AND ?2 AND m.max_size = ?3")
-    MeetingInfo findAllByDate_of_meetingAndMax_size(LocalDateTime date_of_meeting, LocalDateTime date_of_meeting2);
+    List<MeetingInfo> findAllByDate_of_meetingAndMax_size(LocalDateTime date_of_meeting, LocalDateTime date_of_meeting2, int max_size);
     @Query("SELECT m FROM meeting m where m.id_meeting = ?1")
     MeetingInfo findAllById_meeting(String id_meeting);
 
     @Query("SELECT m FROM meeting m where m.id_owner = ?1")
-    MeetingInfo findAllById_owner(String id_owner);
+    List<MeetingInfo> findAllById_owner(String id_owner);
 
     @Query("SELECT m FROM meeting m where m.id_audience = ?1")
-    MeetingInfo findAllById_audience(String id_audience);
+    List<MeetingInfo> findAllById_audience(String id_audience);
 
     @Query("SELECT m FROM meeting m where m.id_equipment = ?1")
-    MeetingInfo findAllById_equipment(String id_equipment);
+   List<MeetingInfo>  findAllById_equipment(String id_equipment);
 
     @Query("SELECT m FROM meeting m where m.id_meeting_name = ?1")
-    MeetingInfo findAllById_meeting_name(String Id_meeting_name);
+    List<MeetingInfo> findAllById_meeting_name(String Id_meeting_name);
 
 }

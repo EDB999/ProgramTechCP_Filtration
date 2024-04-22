@@ -19,10 +19,8 @@ import java.time.LocalDateTime;
 public class LogInfo {
     @Id
     private String id_log;
-    @Column(name = "date_appeals")
-    private LocalDateTime date_appeals;
-    @Column(name = "id_user")
-    private String id_user;
+    @Column(name = "search_str")
+    private String search_str;
     @Column(name = "status_code")
     private String status_code;
 }
