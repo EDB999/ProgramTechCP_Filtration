@@ -12,12 +12,14 @@ import java.util.UUID;
 @Repository
 public interface LogInfoRepository extends JpaRepository<LogInfo, UUID> {
 
-    @Query("SELECT i FROM information_logs i where i.id_log = ?1")
-    LogInfo findById_log(String id_log);
+    @Query("SELECT i FROM information_logs i join params p on p.id_param = i.id_log where i.id_log = ?1")
+    LogInfo findAllById_log(String id_log);
 
-    @Query("SELECT i FROM information_logs i where i.search_str = ?1")
-    List<LogInfo> findBySearch_str(String search_str);
-    @Query("SELECT i FROM information_logs i where i.status_code = ?1")
-    List<LogInfo> findByStatus_code(String status_code);
+    @Query("SELECT i FROM information_logs i join params p on p.id_param = i.params.id_param where i.status_code = ?1")
+    List<LogInfo> findAllByStatus_code(String status_code);
+
+    @Query("SELECT i FROM information_logs i ORDER by i.id_log LIMIT 15")
+    List<LogInfo> findAllById_logEquals(String id_log);
+
 
 }

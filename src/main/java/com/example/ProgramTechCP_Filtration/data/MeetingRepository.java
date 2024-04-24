@@ -2,6 +2,7 @@ package com.example.ProgramTechCP_Filtration.data;
 
 import com.example.ProgramTechCP_Filtration.data.model.MeetingInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Meta;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +33,8 @@ public interface MeetingRepository extends JpaRepository<MeetingInfo, UUID> {
 
     @Query("SELECT m FROM meeting m where m.id_meeting_name = ?1")
     List<MeetingInfo> findAllById_meeting_name(String Id_meeting_name);
+
+    @Query("SELECT m FROM meeting m where m.max_size >= ?1 AND m.max_size <= ?2")
+    List<MeetingInfo> findAllByMax_sizeBetween(int max_size1, int max_size2);
 
 }
