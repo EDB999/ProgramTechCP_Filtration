@@ -32,5 +32,4 @@ public class MeetingInfo {
     private String id_meeting_name;
     @Column(name = "date_of_meeting")
     private LocalDateTime date_of_meeting;
-
 }

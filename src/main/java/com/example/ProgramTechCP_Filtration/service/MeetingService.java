@@ -5,7 +5,7 @@ import com.example.ProgramTechCP_Filtration.data.MeetingRepository;
 import com.example.ProgramTechCP_Filtration.data.ParametersRepository;
 import com.example.ProgramTechCP_Filtration.data.model.LogInfo;
 import com.example.ProgramTechCP_Filtration.data.model.MeetingInfo;
-import com.example.ProgramTechCP_Filtration.data.model.Parameters;
+import com.example.ProgramTechCP_Filtration.data.model.Params;
 import com.example.ProgramTechCP_Filtration.data.model.ResponseInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -25,283 +24,276 @@ public class MeetingService {
     private final LogInfoRepository logInfoRepository;
     @Autowired
     private final ParametersRepository parametersRepository;
-    public ResponseInfo getMeetingBetween(LocalDateTime date1, LocalDateTime date2){
-        var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllByDate_of_meeting(date1, date2)).build();
 
-        var params = parametersRepository.save(Parameters.
+    public ResponseInfo<MeetingInfo> getMeetingBetween(LocalDateTime date1, LocalDateTime date2) {
+        var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllByDate_of_meeting(date1, date2)).build();
+        var id = UUID.randomUUID().toString();
+        LogInfo item;
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(id).
+                    status_code("not found").
+                    build());
+
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(id).
+                    status_code("found").
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 date_start(date1).
                 date_end(date2).
+                logInfo(item).
                 build());
 
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("found").
-                    params(params).
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getIdMeeting(String id_meeting){
+    public ResponseInfo<MeetingInfo> getIdMeeting(String id_meeting) {
         var data = meetingRepository.findAllById_meeting(id_meeting);
 
-        var params = parametersRepository.save(Parameters.
-                builder().
-                id_param(UUID.randomUUID().toString()).
-                id_meeting(id_meeting).
-                build());
-
-
-        System.out.println("id: " + id_meeting);
+        LogInfo item;
         var result = ResponseInfo.<MeetingInfo>builder().build();
-        if(data != null){
+        if (data != null) {
             result.setInfo("Found");
             result.setData(List.of(data));
-            logInfoRepository.save(LogInfo.
+            item = logInfoRepository.save(LogInfo.
                     builder().
                     id_log(UUID.randomUUID().toString()).
                     status_code("Found").
-                    params(params).
                     build());
-        }
-        else{
+        } else {
             result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
+            item = logInfoRepository.save(LogInfo.
                     builder().
                     id_log(UUID.randomUUID().toString()).
                     status_code("Not found").
-                    params(params).
                     build());
         }
+        parametersRepository.save(Params.
+                builder().
+                id_param(UUID.randomUUID().toString()).
+                id_meeting(id_meeting).
+                logInfo(item).
+                build());
+
         return result;
     }
 
-    public ResponseInfo getMaxSize(int max_size){
+    public ResponseInfo<MeetingInfo> getMaxSize(int max_size) {
         var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllByMax_size(max_size)).build();
+        LogInfo item;
 
-        var params = parametersRepository.save(Parameters.
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("found").
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 max_size(max_size).
+                logInfo(item).
                 build());
-
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("found").
-                    params(params).
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getIdOwner(String id_owner){
+    public ResponseInfo<MeetingInfo> getIdOwner(String id_owner) {
         var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllById_owner(id_owner)).build();
 
-        var params = parametersRepository.save(Parameters.
+        LogInfo item;
+
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("found").
+                    build());
+        }
+
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 id_owner(id_owner).
+                logInfo(item).
                 build());
 
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    params(params).
-                    status_code("found").
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getIdAudience(String id_audience){
+    public ResponseInfo<MeetingInfo> getIdAudience(String id_audience) {
         var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllById_audience(id_audience)).build();
 
-        var params = parametersRepository.save(Parameters.
+        LogInfo item;
+
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("found").
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 id_audience(id_audience).
+                logInfo(item).
                 build());
 
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("found").
-                    params(params).
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getIdEquipment(String id_equipment){
+    public ResponseInfo<MeetingInfo> getIdEquipment(String id_equipment) {
         var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllById_equipment(id_equipment)).build();
 
-        var params = parametersRepository.save(Parameters.
+        LogInfo item;
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("found").
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 id_equipment(id_equipment).
+                logInfo(item).
                 build());
 
-
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    params(params).
-                    status_code("found").
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getIdMeetingName(String id_meeting_name){
+    public ResponseInfo<MeetingInfo> getIdMeetingName(String id_meeting_name) {
         var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllById_meeting_name(id_meeting_name)).build();
 
-        var params = parametersRepository.save(Parameters.
+        LogInfo item;
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("found").
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 id_meeting_name(id_meeting_name).
+                logInfo(item).
                 build());
-
-
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    params(params).
-                    status_code("found").
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getMeetingBetweenAndSize(LocalDateTime date1, LocalDateTime date2, int max_size){
+    public ResponseInfo<MeetingInfo> getMeetingBetweenAndSize(LocalDateTime date1, LocalDateTime date2, int max_size) {
         var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllByDate_of_meetingAndMax_size(date1, date2, max_size)).build();
 
-        var params = parametersRepository.save(Parameters.
+        LogInfo item;
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+
+                    status_code("found").
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 date_start(date1).
                 date_end(date2).
                 max_size(max_size).
+                logInfo(item).
                 build());
 
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    params(params).
-                    status_code("found").
-                    build());
-        }
         return result;
     }
 
-    public ResponseInfo getMaxSizeBetween(int max_size1, int max_size2){
-        var result = ResponseInfo.<MeetingInfo>builder().data(meetingRepository.findAllByMax_sizeBetween(max_size1, max_size2)).build();
+    public ResponseInfo<MeetingInfo> getMaxSizeBetween(int max_size1, int max_size2) {
+        var result = ResponseInfo.<MeetingInfo>builder().
+                data(meetingRepository.findAllByMax_sizeBetween(max_size1, max_size2)).
+                build();
 
-        var params = parametersRepository.save(Parameters.
+        LogInfo item;
+        if (result.getData().isEmpty()) {
+            result.setInfo("Not found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("not found").
+                    build());
+        } else {
+            result.setInfo("Found");
+            item = logInfoRepository.save(LogInfo.
+                    builder().
+                    id_log(UUID.randomUUID().toString()).
+                    status_code("found").
+
+                    build());
+        }
+        parametersRepository.save(Params.
                 builder().
                 id_param(UUID.randomUUID().toString()).
                 max_size(max_size1).
                 max_size(max_size2).
+                logInfo(item).
                 build());
-
-        if(result.getData().isEmpty()){
-            result.setInfo("Not found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("not found").
-                    params(params).
-                    build());
-        }
-        else{
-            result.setInfo("Found");
-            logInfoRepository.save(LogInfo.
-                    builder().
-                    id_log(UUID.randomUUID().toString()).
-                    status_code("found").
-                    params(params).
-                    build());
-        }
         return result;
     }
 }

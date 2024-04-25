@@ -29,7 +29,7 @@ public interface MeetingRepository extends JpaRepository<MeetingInfo, UUID> {
     List<MeetingInfo> findAllById_audience(String id_audience);
 
     @Query("SELECT m FROM meeting m where m.id_equipment = ?1")
-   List<MeetingInfo>  findAllById_equipment(String id_equipment);
+    List<MeetingInfo>  findAllById_equipment(String id_equipment);
 
     @Query("SELECT m FROM meeting m where m.id_meeting_name = ?1")
     List<MeetingInfo> findAllById_meeting_name(String Id_meeting_name);
