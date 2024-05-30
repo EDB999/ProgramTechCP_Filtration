@@ -6,12 +6,15 @@ import com.example.ProgramTechCP_Filtration.data.model.ResponseInfo;
 import com.example.ProgramTechCP_Filtration.service.LogInfoService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.ProgramTechCP_Filtration.service.MeetingService;
 
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 @RestController
 @RequestMapping("api/")
@@ -32,7 +35,7 @@ public class FilterController {
     }
 
     @GetMapping("getMaxSize")
-    public ResponseEntity<ResponseInfo<MeetingInfo>> getMaxSize(int max_size) {
+    public ResponseEntity<ResponseInfo<MeetingInfo>> getMaxSize( int max_size) {
         return ResponseEntity.ok(meetingService.getMaxSize(max_size));
     }
 
@@ -65,5 +68,15 @@ public class FilterController {
     @GetMapping("getMaxSizeBetween")
     public ResponseEntity<ResponseInfo<MeetingInfo>> getMaxSizeBetween(int max_size1, int max_size2) {
         return ResponseEntity.ok(meetingService.getMaxSizeBetween(max_size1, max_size2));
+    }
+
+    @GetMapping("addMeeting")
+    public ResponseEntity<String> addMeeting(@RequestBody MeetingInfo meetingInfo) throws URISyntaxException {
+        if (!meetingService.addMeeting(meetingInfo)){
+            return ResponseEntity.ok("");
+        }
+        else {
+            return ResponseEntity.badRequest().body("");
+        }
     }
 }

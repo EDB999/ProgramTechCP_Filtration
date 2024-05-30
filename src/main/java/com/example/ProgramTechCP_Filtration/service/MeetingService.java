@@ -11,6 +11,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -295,5 +300,27 @@ public class MeetingService {
                 logInfo(item).
                 build());
         return result;
+    }
+    public boolean addMeeting(MeetingInfo model) throws URISyntaxException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://www.randomnumberapi.com/api/v1.0/randomredditnumber?min=10&max=25&count=1"))
+                .GET()
+                .build();
+        try{
+            String response = HttpClient.newBuilder().
+                    build().
+                    send(request, HttpResponse.BodyHandlers.ofString()).body();
+
+
+            var size =  response.replace("[","").replace("]","").replace("\n","");
+
+            model.setCurrent_size(Integer.parseInt(size));
+            meetingRepository.save(model);
+        }
+        catch (Exception exception){
+            System.out.println(exception.toString());
+            return false;
+        }
+        return true;
     }
 }

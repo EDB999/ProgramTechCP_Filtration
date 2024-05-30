@@ -1,0 +1,32 @@
+@startuml
+class com.example.ProgramTechCP_Filtration.data.model.MeetingInfo {
+- String id_meeting
+- String id_owner
+- String id_audience
+- int max_size
+- Integer current_size
+- String id_equipment
+- String id_meeting_name
+- LocalDateTime date_of_meeting
+}
+
+class com.example.ProgramTechCP_Filtration.data.model.LogInfo {
+- String id_log
+- String status_code
+- List<Params> params
+}
+
+class com.example.ProgramTechCP_Filtration.data.model.Params {
+- String id_param
+- String id_meeting
+- LocalDateTime date_start
+- LocalDateTime date_end
+- String id_owner
+- int max_size
+- String id_meeting_name
+- String id_audience
+- String id_equipment
+# LogInfo logInfo
+}
+
+@enduml

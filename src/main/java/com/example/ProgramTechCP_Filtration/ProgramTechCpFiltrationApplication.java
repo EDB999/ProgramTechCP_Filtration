@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
-public class ProgramTechCpFiltrationApplication {
+public class
+
+ProgramTechCpFiltrationApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProgramTechCpFiltrationApplication.class, args);
-		System.out.print("Server started " + LocalDateTime.now());
+		System.out.print("Server started " + LocalDateTime.now() + "\n\n\n");
 	}
 
 }

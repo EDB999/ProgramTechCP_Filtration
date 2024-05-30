@@ -1,0 +1,115 @@
+@startuml
+class com.example.ProgramTechCP_Filtration.data.model.MeetingInfo {
+- String id_meeting
+- String id_owner
+- String id_audience
+- int max_size
+- Integer current_size
+- String id_equipment
+- String id_meeting_name
+- LocalDateTime date_of_meeting
+}
+
+interface com.example.ProgramTechCP_Filtration.data.MeetingRepository {
+~ List<MeetingInfo> findAllByMax_size(int)
+~ List<MeetingInfo> findAllByDate_of_meeting(LocalDateTime,LocalDateTime)
+~ List<MeetingInfo> findAllByDate_of_meetingAndMax_size(LocalDateTime,LocalDateTime,int)
+~ MeetingInfo findAllById_meeting(String)
+~ List<MeetingInfo> findAllById_owner(String)
+~ List<MeetingInfo> findAllById_audience(String)
+~ List<MeetingInfo> findAllById_equipment(String)
+~ List<MeetingInfo> findAllById_meeting_name(String)
+~ List<MeetingInfo> findAllByMax_sizeBetween(int,int)
+}
+
+class com.example.ProgramTechCP_Filtration.data.model.LogInfo {
+- String id_log
+- String status_code
+- List<Params> params
+}
+
+class com.example.ProgramTechCP_Filtration.service.MeetingService {
+- MeetingRepository meetingRepository
+- LogInfoRepository logInfoRepository
+- ParametersRepository parametersRepository
++ ResponseInfo<MeetingInfo> getMeetingBetween(LocalDateTime,LocalDateTime)
++ ResponseInfo<MeetingInfo> getIdMeeting(String)
++ ResponseInfo<MeetingInfo> getMaxSize(int)
++ ResponseInfo<MeetingInfo> getIdOwner(String)
++ ResponseInfo<MeetingInfo> getIdAudience(String)
++ ResponseInfo<MeetingInfo> getIdEquipment(String)
++ ResponseInfo<MeetingInfo> getIdMeetingName(String)
++ ResponseInfo<MeetingInfo> getMeetingBetweenAndSize(LocalDateTime,LocalDateTime,int)
++ ResponseInfo<MeetingInfo> getMaxSizeBetween(int,int)
++ boolean addMeeting(MeetingInfo)
+}
+
+
+interface com.example.ProgramTechCP_Filtration.data.ParametersRepository {
+}
+interface com.example.ProgramTechCP_Filtration.data.LogInfoRepository {
+~ LogInfo findAllById_log(String)
+~ List<LogInfo> findAllByStatus_code(String)
+~ List<LogInfo> findAllBySize(int)
+}
+
+class com.example.ProgramTechCP_Filtration.data.model.Params {
+- String id_param
+- String id_meeting
+- LocalDateTime date_start
+- LocalDateTime date_end
+- String id_owner
+- int max_size
+- String id_meeting_name
+- String id_audience
+- String id_equipment
+# LogInfo logInfo
+}
+
+class com.example.ProgramTechCP_Filtration.service.LogInfoService {
+- LogInfoRepository logInfoRepository
++ ResponseInfo<LogInfo> getIdLog(String)
++ ResponseInfo<LogInfo> getStatusCode(String)
++ ResponseInfo<LogInfo> getLogsBySize(int)
+}
+
+
+class com.example.ProgramTechCP_Filtration.data.model.ResponseInfo {
+- String info
+- List<T> data
+}
+
+class com.example.ProgramTechCP_Filtration.ProgramTechCpFiltrationApplication {
++ {static} void main(String[])
+}
+
+class com.example.ProgramTechCP_Filtration.controller.LogController {
+~ LogInfoService logInfoService
++ ResponseEntity<String> health()
++ ResponseEntity<ResponseInfo<LogInfo>> getIdLog(String)
++ ResponseEntity<ResponseInfo<LogInfo>> getStatusCode(String)
++ ResponseEntity<ResponseInfo<LogInfo>> getStatusCode(int)
+}
+
+
+class com.example.ProgramTechCP_Filtration.controller.FilterController {
+~ MeetingService meetingService
++ ResponseEntity<ResponseInfo<MeetingInfo>> getMeetingBetween(LocalDateTime,LocalDateTime)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getIdMeeting(String)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getMaxSize(int)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getIdOwner(String)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getIdAudience(String)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getIdEquipment(String)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getIdMeetingName(String)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getMeetingBetweenAndSize(LocalDateTime,LocalDateTime,int)
++ ResponseEntity<ResponseInfo<MeetingInfo>> getMaxSizeBetween(int,int)
++ ResponseEntity<String> addMeeting(MeetingInfo)
+}
+
+
+
+
+org.springframework.data.jpa.repository.JpaRepository <|-- com.example.ProgramTechCP_Filtration.data.MeetingRepository
+org.springframework.data.jpa.repository.JpaRepository <|-- com.example.ProgramTechCP_Filtration.data.ParametersRepository
+org.springframework.data.jpa.repository.JpaRepository <|-- com.example.ProgramTechCP_Filtration.data.LogInfoRepository
+@enduml

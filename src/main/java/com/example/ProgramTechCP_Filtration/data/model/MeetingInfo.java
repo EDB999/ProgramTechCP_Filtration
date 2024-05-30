@@ -1,6 +1,7 @@
 package com.example.ProgramTechCP_Filtration.data.model;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,13 +12,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Builder
-@Entity(name = "meeting")
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @Entity(name = "meeting")
 
-public class MeetingInfo {
+    public class MeetingInfo {
     @Id
     private String id_meeting;
     @Column(name = "id_owner")
@@ -26,6 +27,8 @@ public class MeetingInfo {
     private String id_audience;
     @Column(name = "max_size")
     private int max_size;
+    @Column (name = "current_size", nullable = true)
+    private Integer current_size = 0;
     @Column(name = "id_equipment")
     private String id_equipment;
     @Column(name = "id_meeting_name")
