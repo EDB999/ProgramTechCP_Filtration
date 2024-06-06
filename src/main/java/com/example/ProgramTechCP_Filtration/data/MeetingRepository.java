@@ -2,7 +2,6 @@ package com.example.ProgramTechCP_Filtration.data;
 
 import com.example.ProgramTechCP_Filtration.data.model.MeetingInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Meta;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -37,4 +36,12 @@ public interface MeetingRepository extends JpaRepository<MeetingInfo, UUID> {
     @Query("SELECT m FROM meeting m where m.max_size >= ?1 AND m.max_size <= ?2")
     List<MeetingInfo> findAllByMax_sizeBetween(int max_size1, int max_size2);
 
+    @Query("SELECT e.id_audience as id, count(e.id_audience) FROM meeting e where e.date_of_meeting between ?1 AND ?2 group by (e.id_audience) order by e.id_audience, count(e.id_audience)")
+    List<String[]> findAllByDateAudience(LocalDateTime dateStart, LocalDateTime dateEnd);
+
+    @Query("SELECT e.id_owner as id, count(e.id_owner) FROM meeting e where e.date_of_meeting between ?1 AND ?2 group by (e.id_owner) order by count(e.id_owner) desc")
+    List<String[]> findAllByDateOwner(LocalDateTime dateStart, LocalDateTime dateEnd);
+
+    @Query("SELECT e.id_equipment as id, count(e.id_equipment) FROM meeting e where e.date_of_meeting between ?1 AND ?2 group by (e.id_equipment) order by count(e.id_equipment) desc")
+    List<String[]> findAllByDateEquip(LocalDateTime dateStart, LocalDateTime dateEnd);
 }
